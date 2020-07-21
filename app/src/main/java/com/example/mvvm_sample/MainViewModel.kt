@@ -29,6 +29,18 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
         }
     }
 
+    fun getUserRepos(page: Int, perPage: Int) {
+        viewModelScope.launch {
+            repo.getUserRepos(page, perPage).let {
+                if (it is Success) {
+                    _users.value = it.data
+                } else {
+                    Timber.d(it.toString())
+                }
+            }
+        }
+    }
+
     fun getUser(name: String) {
         viewModelScope.launch {
             repo.getUser(name).let {
