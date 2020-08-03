@@ -20,6 +20,7 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
     }
 
     fun getUsers(page: Int) {
+        if (_users.value?.size!! >= 100) return
         viewModelScope.launch {
             repo.getUsers(page).let {
                 if (it is Success) {

@@ -17,19 +17,23 @@ interface ApiService {
     @GET("users")
     suspend fun getUsers(
         @Query("since") page: Int = 0,
-        @Query("per_page") limit: Int = USER_LINIT
+        @Query("per_page") limit: Int = USER_LINIT,
+        @Header("authorization") auth: String = token
     ): List<User>
 
 
-    @Headers("Authorization: Bearer $token")
     @GET("user/repos")
     suspend fun getUserRepos(
         @Query("page") page: Int = 0,
-        @Query("per_page") limit: Int = USER_LINIT
+        @Query("per_page") limit: Int = USER_LINIT,
+        @Header("authorization") auth: String = token
     ): List<User>
 
     @GET("users/{username}")
-    suspend fun getUser(@Path("username") userName: String): UserDetail
+    suspend fun getUser(
+        @Path("username") userName: String,
+        @Header("authorization") auth: String = token
+    ): UserDetail
 
     companion object {
         private const val CONNECT_TIME_OUT = 30L
