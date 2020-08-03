@@ -38,6 +38,7 @@ class MainFragment: Fragment() {
             viewmodel.getUsers(i)
         }
         viewmodel.users.observe(viewLifecycleOwner, Observer { it ->
+            Timber.d("users size: ${it.size}")
             recycle_view.layoutManager = LinearLayoutManager(requireContext())
             recycle_view.adapter = UserAdapter(requireContext(), it) {
                 val bundle = Bundle()

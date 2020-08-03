@@ -12,18 +12,22 @@ import timber.log.Timber
 
 class MainViewModel(private val repo: DataRepository) : ViewModel() {
 
-    private var _users = MutableLiveData<List<User>>()
-    val users: LiveData<List<User>> = _users
+    private var _users: MutableLiveData<ArrayList<User>> = MutableLiveData(arrayListOf())
+    val users: LiveData<ArrayList<User>> = _users
 
-    private var _user = MutableLiveData<User>()
-    val user: LiveData<User> = _user
+    init {
+        _users.value = arrayListOf()
+    }
 
     fun getUsers(page: Int) {
         viewModelScope.launch {
             repo.getUsers(page).let {
                 if (it is Success) {
                     Timber.d("users size: ${it.data.size}")
-                    _users.value = it.data
+                    val list = arrayListOf<User>()
+                    list.addAll(_users.value!!.toList())
+                    list.addAll(it.data)
+                    _users.value = list
                 } else {
                     Timber.d(it.toString())
                 }

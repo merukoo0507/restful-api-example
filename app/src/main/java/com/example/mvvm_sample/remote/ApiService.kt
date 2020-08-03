@@ -20,6 +20,7 @@ interface ApiService {
     ): List<User>
 
 
+    @Headers("Authorization: Bearer $token")
     @GET("user/repos")
     suspend fun getUserRepos(
         @Query("page") page: Int = 0,
@@ -41,7 +42,6 @@ interface ApiService {
                 val request = chain
                     ?.request()
                     ?.newBuilder()
-                    ?.addHeader("Authorization", "Bearer ${token}")
                     ?.build()
                 chain?.proceed(request)
             }
@@ -50,10 +50,11 @@ interface ApiService {
                 .addNetworkInterceptor(logging)
                 .build()
             var retrofit = Retrofit.Builder()
-                                .baseUrl("https://api.github.com/")
-                                .addConverterFactory(GsonConverterFactory.create())
-                                .client(okHttpClient)
-                                .build()
+                    .client(okHttpClient)
+                    .baseUrl("https://api.github.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okHttpClient)
+                    .build()
             return retrofit.create(ApiService::class.java)
         }
 
