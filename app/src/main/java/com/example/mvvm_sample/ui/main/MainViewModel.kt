@@ -1,12 +1,13 @@
-package com.example.mvvm_sample
+package com.example.mvvm_sample.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mvvm_sample.remote.User
+import com.example.mvvm_sample.remote.DataRepository
 import kotlinx.coroutines.launch
 import com.example.mvvm_sample.remote.Result.*
+import com.example.mvvm_sample.remote.model.User
 import timber.log.Timber
 
 class MainViewModel(private val repo: DataRepository) : ViewModel() {
@@ -21,6 +22,7 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
         viewModelScope.launch {
             repo.getUsers(page).let {
                 if (it is Success) {
+                    Timber.d("users size: ${it.data.size}")
                     _users.value = it.data
                 } else {
                     Timber.d(it.toString())
@@ -31,21 +33,9 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
 
     fun getUserRepos(page: Int, perPage: Int) {
         viewModelScope.launch {
-            repo.getUserRepos(page, perPage).let {
+            repo.getUserRepos(page).let {
                 if (it is Success) {
-                    _users.value = it.data
-                } else {
-                    Timber.d(it.toString())
-                }
-            }
-        }
-    }
-
-    fun getUser(name: String) {
-        viewModelScope.launch {
-            repo.getUser(name).let {
-                if (it is Success) {
-                    _user.value = it.data
+//                    _users.value = it.data
                 } else {
                     Timber.d(it.toString())
                 }
