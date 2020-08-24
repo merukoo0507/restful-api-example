@@ -1,4 +1,4 @@
-# mvvm-sample
+# github-restful-sample
 
 ## demo
 
