@@ -1,4 +1,4 @@
-package com.example.mvvm_sample.ui.profile
+package com.example.gitRestSample.ui.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.mvvm_sample.R
-import com.example.mvvm_sample.ViewModelFactory
-import com.example.mvvm_sample.databinding.FragmentProfileBinding
+import com.example.gitRestSample.R
+import com.example.gitRestSample.ViewModelFactory
+import com.example.gitRestSample.databinding.FragmentProfileBinding
 import kotlinx.android.synthetic.main.fragment_profile.*
 import timber.log.Timber
 

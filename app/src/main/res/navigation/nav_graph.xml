@@ -6,13 +6,13 @@
 
     <fragment
         android:id="@+id/fragment_main"
-        android:name="com.example.mvvm_sample.ui.main.MainFragment">
+        android:name="com.example.gitRestSample.ui.main.MainFragment">
         <action
             android:id="@+id/action_mainFragment_to_profile_fragment"
             app:destination="@+id/fragment_profile"/>
     </fragment>
 
     <fragment android:id="@+id/fragment_profile"
-        android:name="com.example.mvvm_sample.ui.profile.ProfileFragment">
+        android:name="com.example.gitRestSample.ui.profile.ProfileFragment">
     </fragment>
 </navigation>

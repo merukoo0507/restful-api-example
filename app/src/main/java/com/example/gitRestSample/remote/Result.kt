@@ -1,4 +1,4 @@
-package com.example.mvvm_sample.remote
+package com.example.gitRestSample.remote
 
 import java.lang.Exception
 

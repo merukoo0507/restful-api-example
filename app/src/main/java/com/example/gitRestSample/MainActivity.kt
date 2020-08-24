@@ -1,4 +1,4 @@
-package com.example.mvvm_sample
+package com.example.gitRestSample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

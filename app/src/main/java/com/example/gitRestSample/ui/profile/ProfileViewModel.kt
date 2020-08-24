@@ -1,14 +1,14 @@
-package com.example.mvvm_sample.ui.profile
+package com.example.gitRestSample.ui.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mvvm_sample.remote.DataRepository
+import com.example.gitRestSample.remote.DataRepository
 import kotlinx.coroutines.launch
-import com.example.mvvm_sample.remote.Result.*
-import com.example.mvvm_sample.remote.model.User
-import com.example.mvvm_sample.remote.model.UserDetail
+import com.example.gitRestSample.remote.Result.*
+import com.example.gitRestSample.remote.model.User
+import com.example.gitRestSample.remote.model.UserDetail
 import timber.log.Timber
 
 class ProfileViewModel(private val repo: DataRepository) : ViewModel() {

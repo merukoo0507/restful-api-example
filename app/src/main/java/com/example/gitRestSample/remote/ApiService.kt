@@ -1,9 +1,12 @@
-package com.example.mvvm_sample.remote
+package com.example.gitRestSample.remote
 
-import com.example.mvvm_sample.remote.model.User
-import com.example.mvvm_sample.remote.model.UserDetail
-import com.example.mvvm_sample.util.Constants.USER_LINIT
-import com.example.mvvm_sample.util.Constants.token
+import com.example.gitRestSample.remote.model.User
+import com.example.gitRestSample.remote.model.UserDetail
+import com.example.gitRestSample.util.Constants.USER_LINIT
+import com.example.gitRestSample.util.Constants.token
+import com.example.gitRestSample.util.FlipperHelper
+import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
+//import com.facebook.stetho.okhttp3.StethoInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -55,8 +58,11 @@ interface ApiService {
                     ?.build()
                 chain?.proceed(request)
             }
+
             var okHttpClient = OkHttpClient().newBuilder()
+//                .addInterceptor(StethoInterceptor())
                 .addInterceptor(interceptor)
+                .addNetworkInterceptor(FlipperOkhttpInterceptor(FlipperHelper.networkPlugin))
                 .addNetworkInterceptor(logging)
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
                 .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)

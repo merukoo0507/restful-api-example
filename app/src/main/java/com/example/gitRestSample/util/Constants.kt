@@ -1,4 +1,4 @@
-package com.example.mvvm_sample.util
+package com.example.gitRestSample.util
 
 object Constants {
     const val USER_LINIT = 20

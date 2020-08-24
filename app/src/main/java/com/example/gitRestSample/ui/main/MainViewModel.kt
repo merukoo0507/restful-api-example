@@ -1,13 +1,13 @@
-package com.example.mvvm_sample.ui.main
+package com.example.gitRestSample.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mvvm_sample.remote.DataRepository
+import com.example.gitRestSample.remote.DataRepository
 import kotlinx.coroutines.launch
-import com.example.mvvm_sample.remote.Result.*
-import com.example.mvvm_sample.remote.model.User
+import com.example.gitRestSample.remote.Result.*
+import com.example.gitRestSample.remote.model.User
 import timber.log.Timber
 
 class MainViewModel(private val repo: DataRepository) : ViewModel() {

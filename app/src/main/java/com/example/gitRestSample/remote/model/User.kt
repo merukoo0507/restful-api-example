@@ -1,4 +1,4 @@
-package com.example.mvvm_sample.remote.model
+package com.example.gitRestSample.remote.model
 
 
 import com.google.gson.annotations.SerializedName

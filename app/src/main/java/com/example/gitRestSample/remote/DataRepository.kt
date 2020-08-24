@@ -1,11 +1,11 @@
-package com.example.mvvm_sample.remote
+package com.example.gitRestSample.remote
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
-import com.example.mvvm_sample.remote.Result.*
-import com.example.mvvm_sample.remote.model.User
-import com.example.mvvm_sample.remote.model.UserDetail
+import com.example.gitRestSample.remote.Result.*
+import com.example.gitRestSample.remote.model.User
+import com.example.gitRestSample.remote.model.UserDetail
 
 class DataRepository {
     var ioDispatcher = Dispatchers.IO

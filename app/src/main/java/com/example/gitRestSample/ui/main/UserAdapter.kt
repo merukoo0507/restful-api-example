@@ -1,13 +1,13 @@
-package com.example.mvvm_sample.ui.main
+package com.example.gitRestSample.ui.main
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mvvm_sample.R
-import com.example.mvvm_sample.databinding.ItemUserBinding
-import com.example.mvvm_sample.remote.model.User
+import com.example.gitRestSample.R
+import com.example.gitRestSample.databinding.ItemUserBinding
+import com.example.gitRestSample.remote.model.User
 
 class UserAdapter(
     private val context: Context,

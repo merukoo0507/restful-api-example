@@ -1,10 +1,10 @@
-package com.example.mvvm_sample
+package com.example.gitRestSample
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.mvvm_sample.ui.main.MainViewModel
-import com.example.mvvm_sample.remote.DataRepository
-import com.example.mvvm_sample.ui.profile.ProfileViewModel
+import com.example.gitRestSample.ui.main.MainViewModel
+import com.example.gitRestSample.remote.DataRepository
+import com.example.gitRestSample.ui.profile.ProfileViewModel
 
 class ViewModelFactory(private var repo: DataRepository): ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>) =

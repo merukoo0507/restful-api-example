@@ -1,4 +1,4 @@
-package com.example.mvvm_sample.ui.main
+package com.example.gitRestSample.ui.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mvvm_sample.R
-import com.example.mvvm_sample.ViewModelFactory
-import com.example.mvvm_sample.databinding.FragmentMainBinding
+import com.example.gitRestSample.R
+import com.example.gitRestSample.ViewModelFactory
+import com.example.gitRestSample.databinding.FragmentMainBinding
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 

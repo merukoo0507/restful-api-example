@@ -1,4 +1,4 @@
-# github-restful-sample
+# gitRestSample
 
 ## demo
 
