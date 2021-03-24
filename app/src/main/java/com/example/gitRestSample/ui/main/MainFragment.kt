@@ -9,7 +9,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.gitRestSample.R
 import com.example.gitRestSample.ViewModelFactory
 import com.example.gitRestSample.databinding.FragmentMainBinding
@@ -34,17 +33,22 @@ class MainFragment: Fragment() {
             ViewModelFactory.instance
         ).get(MainViewModel::class.java)
 
-        for (i in 1..5) {
-            viewmodel.getUsers(i)
-        }
-        viewmodel.users.observe(viewLifecycleOwner, Observer { it ->
-            Timber.d("users size: ${it.size}")
-            recycle_view.layoutManager = LinearLayoutManager(requireContext())
-            recycle_view.adapter = UserAdapter(requireContext(), it) {
-                val bundle = Bundle()
-                bundle.putString("name", it)
-                findNavController().navigate(R.id.action_mainFragment_to_profile_fragment, bundle)
+        viewmodel.updateUserList()
+        recycle_view.layoutManager = LinearLayoutManager(requireContext())
+        recycle_view.adapter = UserAdapter(requireContext(), viewmodel.users, {
+            Timber.d("position: $it")
+            if (it == (viewmodel.users.value?.size?.minus(1))) {
+                viewmodel.updateUserList()
             }
+        }) {
+            val bundle = Bundle()
+            bundle.putString("name", it)
+            findNavController().navigate(R.id.action_mainFragment_to_profile_fragment, bundle)
+        }
+
+        viewmodel.users.observe(viewLifecycleOwner, Observer { users ->
+            Timber.d("users size: ${users.size}")
+            (recycle_view.adapter as UserAdapter).notifyDataSetChanged()
         })
     }
 }

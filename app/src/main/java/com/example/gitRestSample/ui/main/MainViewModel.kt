@@ -8,6 +8,8 @@ import com.example.gitRestSample.remote.DataRepository
 import kotlinx.coroutines.launch
 import com.example.gitRestSample.remote.Result.*
 import com.example.gitRestSample.remote.model.User
+import com.example.gitRestSample.util.Constants
+import com.example.gitRestSample.util.Constants.TOTAL_USER_LINIT
 import timber.log.Timber
 
 class MainViewModel(private val repo: DataRepository) : ViewModel() {
@@ -19,8 +21,16 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
         _users.value = arrayListOf()
     }
 
+    fun updateUserList() {
+        if (users.value?.size == 0) {
+            getUsers(1)
+            return
+        }
+        users.value?.size?.div(Constants.USER_LINIT)?.let { getUsers(it) }
+    }
+
     fun getUsers(page: Int) {
-        if (_users.value?.size!! >= 100) return
+        if (_users.value?.size!! >= TOTAL_USER_LINIT) return
         viewModelScope.launch {
             repo.getUsers(page).let {
                 if (it is Success) {

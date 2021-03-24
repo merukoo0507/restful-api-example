@@ -20,22 +20,20 @@ interface ApiService {
     @GET("users")
     suspend fun getUsers(
         @Query("since") page: Int = 0,
-        @Query("per_page") limit: Int = USER_LINIT,
-        @Header("authorization") auth: String = token
+        @Query("per_page") limit: Int = USER_LINIT
     ): List<User>
 
 
     @GET("user/repos")
     suspend fun getUserRepos(
         @Query("page") page: Int = 0,
-        @Query("per_page") limit: Int = USER_LINIT,
-        @Header("authorization") auth: String = token
+        @Query("per_page") limit: Int = USER_LINIT
     ): List<User>
 
     @GET("users/{username}")
     suspend fun getUser(
-        @Path("username") userName: String,
-        @Header("authorization") auth: String = token
+        @Path("username") userName: String
+        //,@Header("authorization") auth: String = token
     ): UserDetail
 
     companion object {
