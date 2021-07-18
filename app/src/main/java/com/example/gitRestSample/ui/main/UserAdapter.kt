@@ -1,10 +1,9 @@
 package com.example.gitRestSample.ui.main
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitRestSample.R
@@ -13,7 +12,7 @@ import com.example.gitRestSample.remote.model.User
 
 class UserAdapter(
     private val context: Context,
-    private val users: LiveData<ArrayList<User>>,
+    private val users: MutableLiveData<List<User>>,
     private val posNotify: (pos: Int) -> Unit,
     private val onUserClick: (name: String) -> Unit
 ) : RecyclerView.Adapter<UserAdapter.UserHolder>() {
@@ -42,7 +41,6 @@ class UserAdapter(
             holder.binding.itemLayout.setOnClickListener {
                 onUserClick(user[position].login)
             }
-            holder.binding.itemLayout.setBackgroundColor(Color.parseColor("#fff2c8"))
             posNotify(position)
         }
     }

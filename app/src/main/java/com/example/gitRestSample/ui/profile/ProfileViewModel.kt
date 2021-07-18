@@ -14,15 +14,21 @@ import timber.log.Timber
 class ProfileViewModel(private val repo: DataRepository) : ViewModel() {
     private var _user = MutableLiveData<UserDetail>()
     val user: LiveData<UserDetail> = _user
+    private var _showProgressBar = MutableLiveData(false)
+    val showProcessBar = _showProgressBar
+    private var _errorMsg = MutableLiveData("")
+    val errorMsg = _errorMsg
 
     fun getUser(name: String) {
         viewModelScope.launch {
+            showProcessBar.value = true
             repo.getUser(name).let {
+                showProcessBar.value = false
                 if (it is Success) {
                     Timber.d(it.data.login)
                     _user.value = it.data
                 } else {
-                    Timber.d(it.toString())
+                    _errorMsg.value = it.toString()
                 }
             }
         }

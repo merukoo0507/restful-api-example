@@ -2,7 +2,6 @@ package com.example.gitRestSample.remote
 
 import com.example.gitRestSample.remote.model.User
 import com.example.gitRestSample.remote.model.UserDetail
-import com.example.gitRestSample.util.Constants.USER_LINIT
 import com.example.gitRestSample.util.Constants.token
 import com.example.gitRestSample.util.FlipperHelper
 import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
@@ -17,17 +16,22 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 interface ApiService {
+    @GET("search/users")
+    suspend fun searchUsers(
+        @Query("since") since: Int = 0,
+        @Header("authorization") auth: String = token
+    ): List<User>
+
     @GET("users")
     suspend fun getUsers(
-        @Query("since") page: Int = 0,
-        @Query("per_page") limit: Int = USER_LINIT
+        @Query("since") since: Int = 0,
+        @Header("authorization") auth: String = token
     ): List<User>
 
 
     @GET("user/repos")
     suspend fun getUserRepos(
-        @Query("page") page: Int = 0,
-        @Query("per_page") limit: Int = USER_LINIT
+        @Query("page") page: Int = 0
     ): List<User>
 
     @GET("users/{username}")

@@ -10,10 +10,10 @@ import com.example.gitRestSample.remote.model.UserDetail
 class DataRepository {
     var ioDispatcher = Dispatchers.IO
 
-    suspend fun getUsers(page: Int): Result<List<User>> {
+    suspend fun getUsers(since: Int): Result<List<User>> {
         return withContext(ioDispatcher) {
             return@withContext try {
-                Success(ApiService.getApiManager().getUsers(page))
+                Success(ApiService.getApiManager().getUsers(since))
             } catch (e: Exception) {
                 Error(e)
             }
