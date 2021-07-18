@@ -1,11 +1,12 @@
 package com.example.gitRestSample.remote
 
+import com.example.gitRestSample.BuildConfig
+import com.example.gitRestSample.remote.model.SearchUserModel
 import com.example.gitRestSample.remote.model.User
 import com.example.gitRestSample.remote.model.UserDetail
-import com.example.gitRestSample.util.Constants.token
+import com.example.gitRestSample.util.Constants.USER_NUM_PER_PAGE
 import com.example.gitRestSample.util.FlipperHelper
 import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
-//import com.facebook.stetho.okhttp3.StethoInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -18,26 +19,16 @@ import java.util.concurrent.TimeUnit
 interface ApiService {
     @GET("search/users")
     suspend fun searchUsers(
-        @Query("since") since: Int = 0,
-        @Header("authorization") auth: String = token
-    ): List<User>
-
-    @GET("users")
-    suspend fun getUsers(
-        @Query("since") since: Int = 0,
-        @Header("authorization") auth: String = token
-    ): List<User>
-
-
-    @GET("user/repos")
-    suspend fun getUserRepos(
-        @Query("page") page: Int = 0
-    ): List<User>
+        @Query("q") q: String,
+        @Query("page") page: Int = 1,
+        @Query("per_page") per_page: Int = USER_NUM_PER_PAGE,
+        @Header("Authorization") token: String = BuildConfig.token
+    ): SearchUserModel
 
     @GET("users/{username}")
     suspend fun getUser(
         @Path("username") userName: String
-        //,@Header("authorization") auth: String = token
+        ,@Header("Authorization") token: String = BuildConfig.token
     ): UserDetail
 
     companion object {

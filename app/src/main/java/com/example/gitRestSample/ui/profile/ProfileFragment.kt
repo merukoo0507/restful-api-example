@@ -52,7 +52,6 @@ class ProfileFragment : Fragment() {
                 .into(avatar)
             name.text = it.name
             login.text = it.login
-            location.text = it.location
             blog.text = it.blog
         })
         viewmodel.errorMsg.observe(viewLifecycleOwner, Observer {

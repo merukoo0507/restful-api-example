@@ -1,14 +1,9 @@
 # gitRestSample
 
 ## demo
+![](.gitbook/assets/search_user.gif)
 
-![](.gitbook/assets/Screenshot_20200824-172347.jpg)
-
-![](.gitbook/assets/Screenshot_20200824-172340.jpg)
-
-## Note
-
-* If there's no data displayed, change the "token" value in "gitRestSample/app/src/main/java/com/example/gitRestSample/util/Constants.kt".
-
-
-
+## Reference
+* https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
+* https://developer.github.com/v3/guides/traversing-with-pagination/#constructing-pagination-links
+* https://developer.github.com/v3/search/#search-users

@@ -38,7 +38,7 @@ class MainFragment: Fragment() {
             ViewModelFactory.instance
         ).get(MainViewModel::class.java)
 
-        viewmodel.loadMoreUserList()
+//        viewmodel.initialPage()
         recycle_view.layoutManager = LinearLayoutManager(requireContext())
         recycle_view.adapter = UserAdapter(requireContext(), viewmodel.users, {
             Timber.d("onUserClick: $it")
@@ -56,6 +56,7 @@ class MainFragment: Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Timber.d("onTextChanged: $s")
                 viewmodel.updateUserList("$s")
             }
 

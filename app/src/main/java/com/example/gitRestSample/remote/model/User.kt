@@ -3,6 +3,11 @@ package com.example.gitRestSample.remote.model
 
 import com.google.gson.annotations.SerializedName
 
+data class SearchUserModel(
+    @SerializedName("items")
+    val items: List<User>
+)
+
 data class User(
     @SerializedName("id")
     val id: Int,

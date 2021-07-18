@@ -1,10 +1,15 @@
 package com.example.gitRestSample.remote
 
+import timber.log.Timber
 import java.lang.Exception
 
 sealed class Result<out R> {
     data class Success<out T>(val data: T): Result<T>()
-    data class Error(val exception: Exception): Result<Nothing>()
+    data class Error(val exception: Exception): Result<Nothing>() {
+        init {
+            Timber.d(this.toString())
+        }
+    }
     object Loading: Result<Nothing>()
 
     override fun toString(): String {

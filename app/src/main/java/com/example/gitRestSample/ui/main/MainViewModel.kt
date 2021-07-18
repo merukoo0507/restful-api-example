@@ -6,50 +6,34 @@ import kotlinx.coroutines.launch
 import com.example.gitRestSample.remote.Result.*
 import com.example.gitRestSample.remote.model.User
 import com.example.gitRestSample.util.Constants
-import com.example.gitRestSample.util.Constants.TOTAL_USER_LINIT
+import com.example.gitRestSample.util.Constants.TOTAL_PAGE_NUM
 import com.example.gitRestSample.util.Constants.USER_NUM_PER_PAGE
 import timber.log.Timber
 
 class MainViewModel(private val repo: DataRepository) : ViewModel() {
-
     private var _allUsers: MutableLiveData<List<User>> = MutableLiveData(listOf())
-    private var _filterUsers: MutableLiveData<List<User>> = MutableLiveData(listOf())
-    val users: MutableLiveData<List<User>> = _filterUsers
+    val users: MutableLiveData<List<User>> = _allUsers
     private var _showProgressBar = MutableLiveData(false)
     val showProcessBar = _showProgressBar
     private var _errorMsg = MutableLiveData("")
     val errorMsg = _errorMsg
     var searchKeyWords = MutableLiveData("")
-    var since = 0
-
-    init {
-        _allUsers.value = arrayListOf()
-    }
+    var page = 1
 
     private fun getAllUsers() {
+        Timber.d("getAllUsers: ${searchKeyWords.value.toString()}, page:$page")
+        if (searchKeyWords.value.toString().isEmpty()) return
         viewModelScope.launch {
             showProcessBar.value = true
-            repo.getUsers(since).let {
+            repo.searchUsers(searchKeyWords.value.toString(), page).let {
                 showProcessBar.value = false
                 if (it is Success) {
                     val list = arrayListOf<User>()
                     list.addAll(_allUsers.value!!.toList())
-                    list.addAll(it.data)
+                    list.addAll(it.data.items)
                     _allUsers.value = list
-                    Timber.d("users size: ${list.size}")
-                } else {
-                    _errorMsg.value = it.toString()
-                }
-                updateUserList()
-            }
-        }
-    }
 
-    fun getUserRepos(page: Int, perPage: Int) {
-        viewModelScope.launch {
-            repo.getUserRepos(page).let {
-                if (it is Success) {
-//                    _allUsers.value = it.data
+                    page ++
                 } else {
                     _errorMsg.value = it.toString()
                 }
@@ -57,22 +41,30 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
         }
     }
 
+    //取得更多資料
     fun loadMoreUserList() {
-        Timber.d("loadMoreUserList() since: $since, size: ${_allUsers.value?.size}")
-        if (since < TOTAL_USER_LINIT) {
+        Timber.d("loadMoreUserList() page: $page")
+        if (page < TOTAL_PAGE_NUM) {
             getAllUsers()
-            since += USER_NUM_PER_PAGE
         }
     }
 
-    fun updateUserList() {
-        _filterUsers.value = _allUsers.value?.filter {
-            it.login?.contains(searchKeyWords.value.toString())
-        }
-    }
-
+    //改變搜尋關鍵字，根據搜尋欄搜尋資料
     fun updateUserList(s: String) {
+        Timber.d("updateUserList: $s")
+        if (s.isEmpty()) return
+        page = 1
         searchKeyWords.value = s
-        updateUserList()
+        _allUsers.value = listOf()
+        getAllUsers()
     }
+
+//    fun initialPage() {
+//        Timber.d("initialPage, users size: ${users.value?.size}")
+//        if (users.value!!.isEmpty()) {
+//            searchKeyWords.value?.let {
+//                updateUserList(it)
+//            }?: updateUserList("")
+//        }
+//    }
 }

@@ -18,6 +18,13 @@ android {
     }
 
     buildTypes {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+        def defaultToken = properties.getProperty('token')
+        debug {
+            buildConfigField 'String', 'token', defaultToken
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
