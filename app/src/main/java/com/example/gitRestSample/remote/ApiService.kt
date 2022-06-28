@@ -25,6 +25,14 @@ interface ApiService {
         @Header("Authorization") token: String = BuildConfig.token
     ): SearchUserModel
 
+    @GET("users")
+    suspend fun getUsers(
+        @Query("since") page: Int = 0,
+        @Query("per_page") limit: Int = USER_NUM_PER_PAGE,
+        @Header("authorization") auth: String = BuildConfig.token
+    ): List<User>
+
+
     @GET("users/{username}")
     suspend fun getUser(
         @Path("username") userName: String
@@ -64,7 +72,7 @@ interface ApiService {
 
             var retrofit = Retrofit.Builder()
                     .client(okHttpClient)
-                    .baseUrl("https://api.github.com/")
+                    .baseUrl("https://api.github.com/")     //直接查訊link可以知道可用的api
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)
                     .build()

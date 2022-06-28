@@ -9,6 +9,7 @@ import com.example.gitRestSample.util.Constants
 import com.example.gitRestSample.util.Constants.TOTAL_PAGE_NUM
 import com.example.gitRestSample.util.Constants.USER_NUM_PER_PAGE
 import timber.log.Timber
+import java.util.concurrent.locks.Lock
 
 class MainViewModel(private val repo: DataRepository) : ViewModel() {
     private var _allUsers: MutableLiveData<List<User>> = MutableLiveData(listOf())
@@ -22,7 +23,6 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
 
     private fun getAllUsers() {
         Timber.d("getAllUsers: ${searchKeyWords.value.toString()}, page:$page")
-        if (searchKeyWords.value.toString().isEmpty()) return
         viewModelScope.launch {
             showProcessBar.value = true
             repo.searchUsers(searchKeyWords.value.toString(), page).let {
@@ -30,10 +30,8 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
                 if (it is Success) {
                     val list = arrayListOf<User>()
                     list.addAll(_allUsers.value!!.toList())
-                    list.addAll(it.data.items)
+                    list.addAll(it.data)
                     _allUsers.value = list
-
-                    page ++
                 } else {
                     _errorMsg.value = it.toString()
                 }
@@ -43,16 +41,20 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
 
     //取得更多資料
     fun loadMoreUserList() {
-        Timber.d("loadMoreUserList() page: $page")
-        if (page < TOTAL_PAGE_NUM) {
-            getAllUsers()
+        synchronized(showProcessBar) {
+            if (showProcessBar.value == true) return
+            showProcessBar.value = true
+            page++
+            Timber.d("loadMoreUserList() page: $page")
+            if (page < TOTAL_PAGE_NUM) {
+                getAllUsers()
+            }
         }
     }
 
     //改變搜尋關鍵字，根據搜尋欄搜尋資料
-    fun updateUserList(s: String) {
+    fun searchUserList(s: String = "") {
         Timber.d("updateUserList: $s")
-        if (s.isEmpty()) return
         page = 1
         searchKeyWords.value = s
         _allUsers.value = listOf()

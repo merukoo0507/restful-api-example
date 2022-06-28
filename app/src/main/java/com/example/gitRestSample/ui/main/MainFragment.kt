@@ -30,24 +30,34 @@ class MainFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewmodel = ViewModelProvider(this,
             ViewModelFactory.instance
         ).get(MainViewModel::class.java)
 
-//        viewmodel.initialPage()
+        if (savedInstanceState == null) {
+            viewmodel.searchUserList()
+        }
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recycle_view.layoutManager = LinearLayoutManager(requireContext())
         recycle_view.adapter = UserAdapter(requireContext(), viewmodel.users, {
             Timber.d("onUserClick: $it")
-            if (it == (viewmodel.users.value?.size?.minus(PRE_LOAD))) {
-                viewmodel.loadMoreUserList()
+            viewmodel.users.value?.size?.let {  size ->
+                if (it > (size - PRE_LOAD)) {
+                    viewmodel.loadMoreUserList()
+                }
             }
         }) {
             val bundle = Bundle()
             bundle.putString("name", it)
+//            findNavController().navigate(
+//                R.id.action_mainFragment_to_profile_fragment,
+//                bundle
+//            )
             findNavController().navigate(R.id.action_mainFragment_to_profile_fragment, bundle)
         }
 
@@ -57,7 +67,7 @@ class MainFragment: Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 Timber.d("onTextChanged: $s")
-                viewmodel.updateUserList("$s")
+                viewmodel.searchUserList("$s")
             }
 
             override fun afterTextChanged(s: Editable?) {
