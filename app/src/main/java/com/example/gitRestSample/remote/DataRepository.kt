@@ -8,8 +8,6 @@ import com.example.gitRestSample.remote.model.User
 import com.example.gitRestSample.remote.model.UserDetail
 
 class DataRepository {
-    var ioDispatcher = Dispatchers.IO
-
     suspend fun searchUsers(q: String, page: Int): Result<List<User>> {
         return withContext(ioDispatcher) {
             return@withContext try {
@@ -32,5 +30,9 @@ class DataRepository {
                 Error(e)
             }
         }
+    }
+
+    companion object {
+        val ioDispatcher = Dispatchers.IO
     }
 }

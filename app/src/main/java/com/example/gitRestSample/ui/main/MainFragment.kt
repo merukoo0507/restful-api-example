@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitRestSample.R
@@ -22,7 +22,11 @@ import timber.log.Timber
 
 class MainFragment: Fragment() {
     private lateinit var binding: FragmentMainBinding
-    private lateinit var viewmodel: MainViewModel
+
+    // Use the 'by viewModels()' Kotlin property delegate from the fragment-ktx artifact
+    private val viewmodel: MainViewModel by viewModels {
+        ViewModelFactory.instance
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,18 +35,29 @@ class MainFragment: Fragment() {
     ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
 
-        viewmodel = ViewModelProvider(this,
-            ViewModelFactory.instance
-        ).get(MainViewModel::class.java)
+        viewmodel.searchUserList()
 
-        if (savedInstanceState == null) {
-            viewmodel.searchUserList()
-        }
+        viewmodel.users.observe(viewLifecycleOwner, Observer {
+            Timber.d("users size: ${it.size}")
+            (recycle_view.adapter as UserAdapter).notifyDataSetChanged()
+        })
+        viewmodel.errorMsg.observe(viewLifecycleOwner, Observer {
+            if (it.isNotEmpty()) {
+                Timber.d("errorMsg $it")
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        })
+        viewmodel.showProcessBar.observe(viewLifecycleOwner, Observer {
+            if (it) requireActivity().progressBar.visibility = View.VISIBLE
+            else requireActivity().progressBar.visibility = View.INVISIBLE
+        })
 
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onStart() {
+        super.onStart()
+
         recycle_view.layoutManager = LinearLayoutManager(requireContext())
         recycle_view.adapter = UserAdapter(requireContext(), viewmodel.users, {
             Timber.d("onUserClick: $it")
@@ -73,21 +88,6 @@ class MainFragment: Fragment() {
             override fun afterTextChanged(s: Editable?) {
             }
 
-        })
-
-        viewmodel.users.observe(viewLifecycleOwner, Observer {
-            Timber.d("users size: ${it.size}")
-            (recycle_view.adapter as UserAdapter).notifyDataSetChanged()
-        })
-        viewmodel.errorMsg.observe(viewLifecycleOwner, Observer {
-            if (it.isNotEmpty()) {
-                Timber.d("errorMsg $it")
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-            }
-        })
-        viewmodel.showProcessBar.observe(viewLifecycleOwner, Observer {
-            if (it) requireActivity().progressBar.visibility = View.VISIBLE
-            else requireActivity().progressBar.visibility = View.INVISIBLE
         })
     }
 }
