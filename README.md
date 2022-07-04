@@ -4,6 +4,9 @@
 - <img src=".gitbook/assets/Screenshot_20200824-172347.jpg" height="500" alt="args"/>
 - <img src=".gitbook/assets/Screenshot_20200824-172340.jpg" height="500" alt="args"/>
 
+- 對接search/users  
+  <img src=".gitbook/assets/Screenshot_20200824-172340.jpg" height="500" alt="args"/>
+
 ### Note
 * If there's no data displayed, change the "token" value in "gitRestSample/app/src/main/java/com/example/gitRestSample/util/Constants.kt".
 
@@ -17,6 +20,8 @@
 - 如果沒連接到Flipper軟體，請檢查SDK是否設定好
 - <img src=".gitbook/assets/set_android_sdk.png" height="500" alt="args"/>
 
-
-
-
+### Reference
+* https://docs.github.com/en/rest
+* https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
+* https://developer.github.com/v3/guides/traversing-with-pagination/#constructing-pagination-links
+* https://developer.github.com/v3/search/#search-users

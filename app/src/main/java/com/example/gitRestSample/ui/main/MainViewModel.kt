@@ -13,20 +13,20 @@ import timber.log.Timber
 class MainViewModel(private val repo: DataRepository) : ViewModel() {
 
     private var _allUsers: MutableLiveData<List<User>> = MutableLiveData(listOf())
-    private var _filterUsers: MutableLiveData<List<User>> = MutableLiveData(listOf())
-    val users: MutableLiveData<List<User>> = _filterUsers
+    val users: MutableLiveData<List<User>> = _allUsers
     private var _showProgressBar = MutableLiveData(false)
     val showProcessBar = _showProgressBar
     private var _errorMsg = MutableLiveData("")
     val errorMsg = _errorMsg
     var searchKeyWords = MutableLiveData("")
     var since = 0
+    var page = 1
 
     init {
         _allUsers.value = arrayListOf()
     }
 
-    private fun getAllUsers() {
+    private fun getUsers() {
         viewModelScope.launch {
             showProcessBar.value = true
             repo.getUsers(since).let {
@@ -36,11 +36,29 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
                     list.addAll(_allUsers.value!!.toList())
                     list.addAll(it.data)
                     _allUsers.value = list
-                    Timber.d("users size: ${list.size}")
+                    since = it.data.last().id
                 } else {
                     _errorMsg.value = it.toString()
                 }
-                updateUserList()
+            }
+        }
+    }
+
+    private fun getSearchUsers() {
+        Timber.d("getSearchUsers: ${searchKeyWords.value.toString()}, page:$page")
+        viewModelScope.launch {
+            showProcessBar.value = true
+            repo.searchUsers(searchKeyWords.value.toString(), page).let {
+                showProcessBar.value = false
+                if (it is Success) {
+                    val list = arrayListOf<User>()
+                    list.addAll(_allUsers.value!!.toList())
+                    list.addAll(it.data.items)
+                    _allUsers.value = list
+                    page++
+                } else {
+                    _errorMsg.value = it.toString()
+                }
             }
         }
     }
@@ -57,22 +75,34 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
         }
     }
 
+    //取得更多資料
     fun loadMoreUserList() {
-        Timber.d("loadMoreUserList() since: $since, size: ${_allUsers.value?.size}")
-        if (since < TOTAL_USER_LINIT) {
-            getAllUsers()
-            since += USER_NUM_PER_PAGE
+        Timber.d("loadMoreUserList")
+        synchronized(showProcessBar) {
+            if (showProcessBar.value == true) return
+            showProcessBar.value = true
+
+            if ((users.value!!.size + USER_NUM_PER_PAGE) < TOTAL_USER_LINIT) {
+                if (searchKeyWords.value!!.isNullOrEmpty()) {
+                    getUsers()
+                } else {
+                    getSearchUsers()
+                }
+            }
         }
     }
 
-    fun updateUserList() {
-        _filterUsers.value = _allUsers.value?.filter {
-            it.login?.contains(searchKeyWords.value.toString())
-        }
-    }
-
-    fun updateUserList(s: String) {
+    //改變搜尋關鍵字，根據搜尋欄搜尋資料
+    fun searchUserList(s: String = "") {
+        Timber.d("updateUserList: $s")
         searchKeyWords.value = s
-        updateUserList()
+        _allUsers.value = listOf()
+        if (s.isNullOrEmpty()) {
+            since = 1
+            getUsers()
+        } else {
+            page = 1
+            getSearchUsers()
+        }
     }
 }

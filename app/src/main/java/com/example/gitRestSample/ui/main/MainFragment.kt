@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitRestSample.R
@@ -22,7 +23,10 @@ import timber.log.Timber
 
 class MainFragment: Fragment() {
     private lateinit var binding: FragmentMainBinding
-    private lateinit var viewmodel: MainViewModel
+    // Use the 'by viewModels()' Kotlin property delegate from the fragment-ktx artifact
+    private val viewmodel: MainViewModel by viewModels {
+        ViewModelFactory.instance
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,17 +37,17 @@ class MainFragment: Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewmodel = ViewModelProvider(this,
-            ViewModelFactory.instance
-        ).get(MainViewModel::class.java)
+    override fun onStart() {
+        super.onStart()
 
         viewmodel.loadMoreUserList()
         recycle_view.layoutManager = LinearLayoutManager(requireContext())
         recycle_view.adapter = UserAdapter(requireContext(), viewmodel.users, {
             Timber.d("onUserClick: $it")
-            if (it == (viewmodel.users.value?.size?.minus(PRE_LOAD))) {
-                viewmodel.loadMoreUserList()
+            viewmodel.users.value?.size?.let {  size ->
+                if (it > (size - PRE_LOAD)) {
+                    viewmodel.loadMoreUserList()
+                }
             }
         }) {
             val bundle = Bundle()
@@ -57,7 +61,7 @@ class MainFragment: Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 Timber.d("onTextChanged: $s")
-                viewmodel.updateUserList("$s")
+                viewmodel.searchUserList("$s")
             }
 
             override fun afterTextChanged(s: Editable?) {
