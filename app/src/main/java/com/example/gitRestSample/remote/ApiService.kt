@@ -45,11 +45,8 @@ interface ApiService {
         private const val WRITE_TIME_OUT = 30L
         private lateinit var apiManager: ApiService
         private fun create() : ApiService {
-            val logging = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger{
-                override fun log(message: String) {
-                    Timber.i(message)
-                }
-            })
+            val logging = HttpLoggingInterceptor()
+            logging.level = HttpLoggingInterceptor.Level.BODY
             val interceptor = Interceptor { chain ->
                 val request = chain
                     ?.request()

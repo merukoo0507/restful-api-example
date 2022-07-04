@@ -1,9 +1,7 @@
 package com.example.gitRestSample.ui.profile
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -11,23 +9,17 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.gitRestSample.R
 import com.example.gitRestSample.ViewModelFactory
-import com.example.gitRestSample.databinding.FragmentProfileBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import timber.log.Timber
 
-class ProfileFragment : Fragment() {
-    private lateinit var binding: FragmentProfileBinding
+class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val viewmodel: ProfileViewModel by viewModels {
         ViewModelFactory.instance
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         val bundle = this.arguments
         bundle?.let {
@@ -35,6 +27,10 @@ class ProfileFragment : Fragment() {
             Timber.d("name: $name")
             viewmodel.getUser(name)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         viewmodel.user.observe(viewLifecycleOwner, Observer {
             Timber.d("user: ${it.login}")
@@ -58,7 +54,5 @@ class ProfileFragment : Fragment() {
             if (it) requireActivity().progressBar.visibility = View.VISIBLE
             else requireActivity().progressBar.visibility = View.INVISIBLE
         })
-
-        return binding.root
     }
 }

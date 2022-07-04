@@ -21,6 +21,8 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
     var searchKeyWords = MutableLiveData("")
     var page = 1
 
+    var updateState = MutableLiveData(false)
+
     private fun getAllUsers() {
         Timber.d("getAllUsers: ${searchKeyWords.value.toString()}, page:$page")
         viewModelScope.launch {
@@ -32,6 +34,8 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
                     list.addAll(_allUsers.value!!.toList())
                     list.addAll(it.data)
                     _allUsers.value = list
+                    page++
+                    updateState.value = true
                 } else {
                     _errorMsg.value = it.toString()
                 }
@@ -44,7 +48,6 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
         synchronized(showProcessBar) {
             if (showProcessBar.value == true) return
             showProcessBar.value = true
-            page++
             Timber.d("loadMoreUserList() page: $page")
             if (page < TOTAL_PAGE_NUM) {
                 getAllUsers()
@@ -60,13 +63,4 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
         _allUsers.value = listOf()
         getAllUsers()
     }
-
-//    fun initialPage() {
-//        Timber.d("initialPage, users size: ${users.value?.size}")
-//        if (users.value!!.isEmpty()) {
-//            searchKeyWords.value?.let {
-//                updateUserList(it)
-//            }?: updateUserList("")
-//        }
-//    }
 }
