@@ -1,4 +1,4 @@
-package com.example.mvvm_sample
+package com.example.gitRestSample
 
 import org.junit.Test
 
