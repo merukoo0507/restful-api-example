@@ -12,6 +12,8 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitRestSample.R
+import com.example.gitRestSample.remote.model.User
+import com.example.gitRestSample.ui.list.ShareViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
@@ -75,5 +77,16 @@ class MainFragment: Fragment(R.layout.fragment_main) {
             if (it) requireActivity().progressBar.visibility = View.VISIBLE
             else requireActivity().progressBar.visibility = View.INVISIBLE
         })
+
+        add_item.setOnClickListener {
+            var user = User(1, "https://avatars.githubusercontent.com/u/2?v=4", "defunkt", false)
+            var users: ArrayList<User> = arrayListOf()
+            users.add(user)
+            users.addAll(viewmodel.users.value!!)
+            viewmodel.users.value = users
+
+            userAdapter.addData(0, user)
+            recycle_view.scrollToPosition(0)
+        }
     }
 }

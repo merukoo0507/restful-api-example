@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitRestSample.R
-import com.example.gitRestSample.databinding.ItemUserBinding
 import com.example.gitRestSample.remote.model.User
 import com.example.gitRestSample.util.Constants
 import kotlinx.android.synthetic.main.item_user.view.*
@@ -60,5 +59,10 @@ class UserAdapter(
         users.clear()
         users.addAll(it)
         notifyDataSetChanged()
+    }
+
+    fun addData(position: Int, user: User) {
+        users.add(position, user)
+        notifyItemRangeInserted(position, 1)
     }
 }
