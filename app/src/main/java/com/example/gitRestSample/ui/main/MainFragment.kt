@@ -6,40 +6,50 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitRestSample.R
-import com.example.gitRestSample.ViewModelFactory
-import com.example.gitRestSample.util.Constants.PRE_LOAD
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 
 class MainFragment: Fragment(R.layout.fragment_main) {
     // Use the 'by viewModels()' Kotlin property delegate from the fragment-ktx artifact
-    private val viewmodel: MainViewModel by viewModels {
-        ViewModelFactory.instance
+    private val viewmodel: MainViewModel by viewModels()
+
+    private val shareViewModel: ShareViewModel by activityViewModels()
+
+    private lateinit var userAdapter: UserAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewmodel.loadMoreUserList()
     }
 
     override fun onStart() {
         super.onStart()
 
-        viewmodel.loadMoreUserList()
-        recycle_view.layoutManager = LinearLayoutManager(requireContext())
-        recycle_view.adapter = UserAdapter(requireContext(), viewmodel.users, {
-            Timber.d("onUserClick: $it")
-            viewmodel.users.value?.size?.let {  size ->
-                if (it > (size - PRE_LOAD)) {
-                    viewmodel.loadMoreUserList()
-                }
-            }
-        }) {
-            val bundle = Bundle()
-            bundle.putString("name", it)
-            findNavController().navigate(R.id.action_mainFragment_to_profile_fragment, bundle)
+        userAdapter = UserAdapter(requireContext(),
+            { viewmodel.loadMoreUserList() }) {
+            shareViewModel.user.value = it
+            findNavController().navigate(R.id.action_mainFragment_to_profile_fragment)
+//            parentFragmentManager.commit {
+//                add(R.id.nav_host_fragment_container, ProfileFragment::class.java, bundle, null)
+//                addToBackStack(null)
+//            }
         }
+        recycle_view.layoutManager = LinearLayoutManager(requireContext())
+        recycle_view.adapter = userAdapter
+
+        // Can't access the Fragment View's LifecycleOwner when getView() is null i.e., before onCreateView() or after onDestroyView()
+        viewmodel.users.observe(viewLifecycleOwner, Observer {
+            Timber.d("users size: ${it.size}")
+            userAdapter.updateData(it)
+        })
 
         search_edit_text.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -55,10 +65,6 @@ class MainFragment: Fragment(R.layout.fragment_main) {
 
         })
 
-        viewmodel.users.observe(viewLifecycleOwner, Observer {
-            Timber.d("users size: ${it.size}")
-            (recycle_view.adapter as UserAdapter).notifyDataSetChanged()
-        })
         viewmodel.errorMsg.observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()) {
                 Timber.d("errorMsg $it")

@@ -1,17 +1,17 @@
 package com.example.gitRestSample.ui.main
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.gitRestSample.remote.DataRepository
-import kotlinx.coroutines.launch
-import com.example.gitRestSample.remote.Result.*
+import com.example.gitRestSample.remote.Result.Success
 import com.example.gitRestSample.remote.model.User
-import com.example.gitRestSample.util.Constants
 import com.example.gitRestSample.util.Constants.TOTAL_USER_LINIT
 import com.example.gitRestSample.util.Constants.USER_NUM_PER_PAGE
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class MainViewModel(private val repo: DataRepository) : ViewModel() {
-
+class MainViewModel: ViewModel() {
     private var _allUsers: MutableLiveData<List<User>> = MutableLiveData(listOf())
     val users: MutableLiveData<List<User>> = _allUsers
     private var _showProgressBar = MutableLiveData(false)
@@ -27,9 +27,10 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
     }
 
     private fun getUsers() {
+        Timber.d("getUsers size: ${_allUsers.value!!.size}, since: $since")
         viewModelScope.launch {
             showProcessBar.value = true
-            repo.getUsers(since).let {
+            DataRepository.instance.getUsers(since).let {
                 showProcessBar.value = false
                 if (it is Success) {
                     val list = arrayListOf<User>()
@@ -48,7 +49,7 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
         Timber.d("getSearchUsers: ${searchKeyWords.value.toString()}, page:$page")
         viewModelScope.launch {
             showProcessBar.value = true
-            repo.searchUsers(searchKeyWords.value.toString(), page).let {
+            DataRepository.instance.searchUsers(searchKeyWords.value.toString(), page).let {
                 showProcessBar.value = false
                 if (it is Success) {
                     val list = arrayListOf<User>()
@@ -65,7 +66,7 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
 
     fun getUserRepos(page: Int, perPage: Int) {
         viewModelScope.launch {
-            repo.getUserRepos(page).let {
+            DataRepository.instance.getUserRepos(page).let {
                 if (it is Success) {
 //                    _allUsers.value = it.data
                 } else {
@@ -80,8 +81,6 @@ class MainViewModel(private val repo: DataRepository) : ViewModel() {
         Timber.d("loadMoreUserList")
         synchronized(showProcessBar) {
             if (showProcessBar.value == true) return
-            showProcessBar.value = true
-
             if ((users.value!!.size + USER_NUM_PER_PAGE) < TOTAL_USER_LINIT) {
                 if (searchKeyWords.value!!.isNullOrEmpty()) {
                     getUsers()

@@ -1,34 +1,30 @@
 package com.example.gitRestSample.ui.profile
 
+import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.gitRestSample.R
-import com.example.gitRestSample.ViewModelFactory
+import com.example.gitRestSample.ui.main.ShareViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import timber.log.Timber
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
-    private val viewmodel: ProfileViewModel by viewModels {
-        ViewModelFactory.instance
-    }
+    private val shareViewModel: ShareViewModel by activityViewModels()
+    private val viewmodel: ProfileViewModel by viewModels()
 
     override fun onStart() {
         super.onStart()
-
-        val bundle = this.arguments
-        bundle?.let {
-            val name = it.get("name").toString()
-            Timber.d("name: $name")
-            viewmodel.getUser(name)
+        shareViewModel.user.value?.let {
+            viewmodel.getUser(it.login)
         }
-
         viewmodel.user.observe(viewLifecycleOwner, Observer {
-            Timber.d("user: ${it.login}")
+            Timber.d("user: $it")
             Glide
                 .with(requireContext())
                 .load(it.avatarUrl)

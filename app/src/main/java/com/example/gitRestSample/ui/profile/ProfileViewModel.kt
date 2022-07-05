@@ -10,9 +10,10 @@ import com.example.gitRestSample.remote.model.UserDetail
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class ProfileViewModel(private val repo: DataRepository) : ViewModel() {
+class ProfileViewModel: ViewModel() {
     private var _user = MutableLiveData<UserDetail>()
     val user: LiveData<UserDetail> = _user
+
     private var _showProgressBar = MutableLiveData(false)
     val showProcessBar = _showProgressBar
     private var _errorMsg = MutableLiveData("")
@@ -21,7 +22,7 @@ class ProfileViewModel(private val repo: DataRepository) : ViewModel() {
     fun getUser(name: String) {
         viewModelScope.launch {
             showProcessBar.value = true
-            repo.getUser(name).let {
+            DataRepository.instance.getUser(name).let {
                 showProcessBar.value = false
                 if (it is Success) {
                     Timber.d(it.data.login)

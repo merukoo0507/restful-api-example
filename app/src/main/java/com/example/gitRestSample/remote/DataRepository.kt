@@ -53,5 +53,7 @@ class DataRepository {
 
     companion object {
         val ioDispatcher = Dispatchers.IO
+
+        val instance by lazy { DataRepository() }
     }
 }
