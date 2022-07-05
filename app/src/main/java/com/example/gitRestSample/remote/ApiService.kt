@@ -1,6 +1,8 @@
 package com.example.gitRestSample.remote
 
+import android.app.Application
 import com.example.gitRestSample.MainApplication.Companion.networkFlipperPlugin
+import com.example.gitRestSample.remote.model.SearchUserModel
 import com.example.gitRestSample.remote.model.User
 import com.example.gitRestSample.remote.model.UserDetail
 import com.example.gitRestSample.util.Constants.USER_NUM_PER_PAGE
@@ -11,10 +13,21 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Path
+import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
 interface ApiService {
+    @GET("search/users")
+    suspend fun searchUsers(
+        @Query("q") q: String,
+        @Query("page") page: Int = 1,
+        @Query("per_page") per_page: Int = USER_NUM_PER_PAGE,
+         @Header("authorization") auth: String = token
+    ): SearchUserModel
+
     @GET("users")
     suspend fun getUsers(
         @Query("since") since: Int = 0,
@@ -60,7 +73,7 @@ interface ApiService {
 
             var retrofit = Retrofit.Builder()
                     .client(okHttpClient)
-                    .baseUrl("https://api.github.com/")
+                    .baseUrl("https://api.github.com/")     //直接查訊link可以知道可用的api
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)
                     .build()
