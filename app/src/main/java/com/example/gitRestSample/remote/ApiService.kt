@@ -11,6 +11,7 @@ import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -53,6 +54,9 @@ interface ApiService {
         private const val WRITE_TIME_OUT = 30L
         private lateinit var apiManager: ApiService
         private fun create() : ApiService {
+            val logging = HttpLoggingInterceptor()
+            logging.level = HttpLoggingInterceptor.Level.BODY
+
             val interceptor = Interceptor { chain ->
                 val request = chain
                     ?.request()
@@ -64,6 +68,7 @@ interface ApiService {
             }
 
             var okHttpClient = OkHttpClient().newBuilder()
+                .addInterceptor(logging)
                 .addInterceptor(interceptor)
                 .addNetworkInterceptor(FlipperOkhttpInterceptor(networkFlipperPlugin))
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)

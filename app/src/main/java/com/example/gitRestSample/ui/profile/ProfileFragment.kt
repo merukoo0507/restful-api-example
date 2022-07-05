@@ -1,5 +1,6 @@
 package com.example.gitRestSample.ui.profile
 
+import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -17,8 +18,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         ViewModelFactory.instance
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         val bundle = this.arguments
         bundle?.let {
@@ -26,6 +27,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             Timber.d("name: $name")
             viewmodel.getUser(name)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         viewmodel.user.observe(viewLifecycleOwner, Observer {
             Timber.d("user: ${it.login}")
