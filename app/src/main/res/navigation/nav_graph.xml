@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/fragment_main">
 
@@ -17,4 +18,9 @@
         android:label="Profile"
         android:name="com.example.gitRestSample.ui.profile.ProfileFragment">
     </fragment>
+    <fragment
+        android:id="@+id/fragment_list"
+        android:name="com.example.gitRestSample.ui.list.ListFragment"
+        android:label="List"
+        tools:layout="@layout/fragment_list" />
 </navigation>

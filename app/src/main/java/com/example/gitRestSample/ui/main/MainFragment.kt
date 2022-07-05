@@ -6,13 +6,14 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitRestSample.R
 import com.example.gitRestSample.ViewModelFactory
-import com.example.gitRestSample.remote.model.User
+import com.example.gitRestSample.ui.list.ShareViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
@@ -22,11 +23,19 @@ class MainFragment: Fragment(R.layout.fragment_main) {
     private val viewmodel: MainViewModel by viewModels {
         ViewModelFactory.instance
     }
+
+    private val shareViewModel: ShareViewModel by activityViewModels()
+
     private lateinit var userAdapter: UserAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewmodel.loadMoreUserList()
+    }
 
     override fun onStart() {
         super.onStart()
-
 
         userAdapter = UserAdapter(requireContext(),
             { viewmodel.loadMoreUserList() }) {
@@ -46,7 +55,6 @@ class MainFragment: Fragment(R.layout.fragment_main) {
             Timber.d("users size: ${it.size}")
             userAdapter.updateData(it)
         })
-        viewmodel.loadMoreUserList()
 
         search_edit_text.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
