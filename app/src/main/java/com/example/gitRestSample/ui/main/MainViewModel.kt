@@ -21,6 +21,7 @@ class MainViewModel: ViewModel() {
     var searchKeyWords = MutableLiveData("")
     var since = 1
     var page = 1
+    var updateStatus = MutableLiveData(false)
 
     init {
         _allUsers.value = arrayListOf()
@@ -37,6 +38,8 @@ class MainViewModel: ViewModel() {
                     list.addAll(_allUsers.value!!.toList())
                     list.addAll(it.data)
                     _allUsers.value = list
+                    updateStatus.value = true
+
                     since = it.data.last().id
                 } else {
                     _errorMsg.value = it.toString()
@@ -56,6 +59,8 @@ class MainViewModel: ViewModel() {
                     list.addAll(_allUsers.value!!.toList())
                     list.addAll(it.data.items)
                     _allUsers.value = list
+                    updateStatus.value = true
+
                     page++
                 } else {
                     _errorMsg.value = it.toString()
@@ -103,5 +108,29 @@ class MainViewModel: ViewModel() {
             page = 1
             getSearchUsers()
         }
+    }
+
+    fun addUser(user: User) {
+        var _users: ArrayList<User> = arrayListOf()
+        _users.add(user)
+        _users.addAll(users.value!!)
+        users.value = _users
+    }
+
+    fun deleteUser(id: Int) {
+        var _users: List<User> = users.value!!.filter { it.id == id }
+        users.value = _users
+    }
+
+    fun updateUser(user: User) {
+        var _users: ArrayList<User> = arrayListOf()
+        _users.addAll(users.value!!)
+        _users.forEachIndexed { index, it ->
+            if (it.id == user.id) {
+                _users[index] = user
+                return@forEachIndexed
+            }
+        }
+        users.value = _users
     }
 }

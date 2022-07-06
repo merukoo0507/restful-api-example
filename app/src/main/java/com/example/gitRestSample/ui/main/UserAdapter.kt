@@ -55,7 +55,7 @@ class UserAdapter(
         }
     }
 
-    fun updateData(it: List<User>) {
+    fun updateDatas(it: List<User>) {
         users.clear()
         users.addAll(it)
         notifyDataSetChanged()
@@ -64,5 +64,33 @@ class UserAdapter(
     fun addData(position: Int, user: User) {
         users.add(position, user)
         notifyItemRangeInserted(position, 1)
+    }
+
+    fun deleteData(id: Int): Int {
+        var idx = -1
+        users.forEachIndexed { index, it ->
+            if (it.id == id) idx = index
+        }
+        if (idx == -1) return -1
+        users.removeAt(idx)
+        notifyItemRangeRemoved(idx, 1)
+        return idx
+    }
+
+    fun updateData(user: User): Int {
+        var idx = -1
+        users.forEachIndexed { index, it ->
+            if (it.id == user.id) idx = index
+        }
+        if (idx == -1) return -1
+        users[idx] = user
+        notifyItemRangeChanged(idx, 1)
+        return idx
+    }
+
+    fun moveData(fromPos: Int, toPos: Int) {
+        var _user = users.removeAt(fromPos)
+        users.add(toPos, _user)
+        notifyItemMoved(fromPos, toPos)
     }
 }

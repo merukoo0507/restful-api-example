@@ -12,21 +12,116 @@
         android:id="@+id/search_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Input some keywords ..."
+        android:hint="Input search words..."
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <Button
+        android:id="@+id/btn_show_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="show actions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/btn_show_action">
+
+        <EditText
+            android:id="@+id/edit_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Input ID"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/edit_avatar_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Input avatar URL"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_id" />
+
+        <EditText
+            android:id="@+id/edit_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Input Account"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_avatar_url" />
+
+        <EditText
+            android:id="@+id/edit_from_pos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1"
+            android:hint="From Position"
+            android:inputType="number"
+            app:layout_constraintEnd_toStartOf="@+id/edit_to_pos"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_login" />
+
+        <EditText
+            android:id="@+id/edit_to_pos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1"
+            android:hint="To Position"
+            android:inputType="number"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/edit_from_pos"
+            app:layout_constraintTop_toBottomOf="@id/edit_login" />
+
         <Button
             android:id="@+id/add_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            android:text="Add"
+            app:layout_constraintEnd_toStartOf="@+id/delete_item"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_from_pos" />
+
+        <Button
+            android:id="@+id/delete_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="delete"
+            app:layout_constraintEnd_toStartOf="@+id/update_item"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/add_item"
+            app:layout_constraintTop_toBottomOf="@id/edit_from_pos" />
+
+        <Button
+            android:id="@+id/update_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update"
+            app:layout_constraintEnd_toStartOf="@+id/change_position"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/delete_item"
+            app:layout_constraintTop_toBottomOf="@id/edit_from_pos" />
+
+        <Button
+            android:id="@+id/change_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change Pos"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/update_item"
+            app:layout_constraintTop_toBottomOf="@id/edit_from_pos" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_view"
@@ -34,5 +129,5 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
+        app:layout_constraintTop_toBottomOf="@+id/ll_actions" />
 </androidx.constraintlayout.widget.ConstraintLayout>
