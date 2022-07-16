@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.gitRestSample.remote.DataRepository
 import com.example.gitRestSample.remote.Result.Success
 import com.example.gitRestSample.remote.model.User
+import com.example.gitRestSample.util.Constants
 import com.example.gitRestSample.util.Constants.TOTAL_USER_LINIT
 import com.example.gitRestSample.util.Constants.USER_NUM_PER_PAGE
 import kotlinx.coroutines.launch
@@ -73,7 +74,7 @@ class MainViewModel: ViewModel() {
         viewModelScope.launch {
             DataRepository.instance.getUserRepos(page).let {
                 if (it is Success) {
-//                    _allUsers.value = it.data
+                    // 設定Repo資料
                 } else {
                     _errorMsg.value = it.toString()
                 }
@@ -111,26 +112,36 @@ class MainViewModel: ViewModel() {
     }
 
     fun addUser(user: User) {
-        var _users: ArrayList<User> = arrayListOf()
-        _users.add(user)
-        _users.addAll(users.value!!)
-        users.value = _users
+        var list: ArrayList<User> = arrayListOf()
+        list.add(user)
+        list.addAll(users.value!!)
+        _allUsers.value = list
     }
 
     fun deleteUser(id: Int) {
-        var _users: List<User> = users.value!!.filter { it.id == id }
-        users.value = _users
+        var list: List<User> = _allUsers.value!!.filter { it.id != id }
+        _allUsers.value = list
     }
 
     fun updateUser(user: User) {
-        var _users: ArrayList<User> = arrayListOf()
-        _users.addAll(users.value!!)
-        _users.forEachIndexed { index, it ->
+        var list: ArrayList<User> = arrayListOf()
+        list.addAll(users.value!!)
+        list.forEachIndexed { index, it ->
             if (it.id == user.id) {
-                _users[index] = user
+                list[index] = user
                 return@forEachIndexed
             }
         }
-        users.value = _users
+        _allUsers.value = list
+    }
+
+    fun changePos(fromPos: Int, toPos: Int) {
+        _allUsers.value?.get(fromPos)?.let {
+            var list: ArrayList<User> = arrayListOf()
+            var oldList = _allUsers.value!!.filterIndexed { index, user -> index != fromPos }
+            list.addAll(oldList)
+            list.add(toPos, it)
+            _allUsers.value = list
+        }
     }
 }

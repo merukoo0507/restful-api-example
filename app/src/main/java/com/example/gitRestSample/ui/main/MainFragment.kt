@@ -60,13 +60,13 @@ class MainFragment: Fragment(R.layout.fragment_main) {
 
     fun observers() {
         // Can't access the Fragment View's LifecycleOwner when getView() is null i.e., before onCreateView() or after onDestroyView()
-        viewmodel.updateStatus.observe(viewLifecycleOwner, Observer {
-            if (!it) return@Observer
-            viewmodel.users.value?.let {
-                Timber.d("users size: ${it.size}")
-                userAdapter.updateDatas(it)
+        viewmodel.users.observe(viewLifecycleOwner, Observer {
+            Timber.d("users size: ${it.size}")
+            if (it.isNotEmpty()) {
+                userAdapter.submitList(it)
+            } else {
+                userAdapter.submitList(emptyList())
             }
-            viewmodel.updateStatus.value = false
         })
 
         viewmodel.errorMsg.observe(viewLifecycleOwner, Observer {
@@ -104,24 +104,18 @@ class MainFragment: Fragment(R.layout.fragment_main) {
         add_item.setOnClickListener {
             var user = User(id, edit_avatar_url.text.toString(), edit_login.text.toString(), false)
             viewmodel.addUser(user)
-            userAdapter.addData(0, user)
-            recycle_view.scrollToPosition(0)
         }
 
         delete_item.setOnClickListener {
             if (edit_id.text.toString().isNullOrEmpty()) return@setOnClickListener
             var id = Integer.parseInt(edit_id.text.toString())
             viewmodel.deleteUser(id)
-            var idx = userAdapter.deleteData(id)
-            if (idx >= 0)   recycle_view.scrollToPosition(idx)
         }
 
         update_item.setOnClickListener {
             if (edit_id.text.toString().isNullOrEmpty()) return@setOnClickListener
             var user = User(Integer.parseInt(edit_id.text.toString()), edit_avatar_url.text.toString(), edit_login.text.toString(), false)
             viewmodel.updateUser(user)
-            var idx = userAdapter.updateData(user)
-            if (idx >= 0) recycle_view.scrollToPosition(idx)
         }
 
         change_position.setOnClickListener {
@@ -130,8 +124,7 @@ class MainFragment: Fragment(R.layout.fragment_main) {
 
             var fromPos = Integer.parseInt(edit_from_pos.text.toString())
             var toPos = Integer.parseInt(edit_to_pos.text.toString())
-            userAdapter.moveData(fromPos, toPos)
-            recycle_view.scrollToPosition(toPos)
+            viewmodel.changePos(fromPos, toPos)
         }
     }
 }
