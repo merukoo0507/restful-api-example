@@ -1,4 +1,4 @@
-package com.example.gitRestSample
+package com.example.restful_api_example
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

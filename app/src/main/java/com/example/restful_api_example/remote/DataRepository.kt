@@ -1,12 +1,12 @@
-package com.example.gitRestSample.remote
+package com.example.restful_api_example.remote
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
-import com.example.gitRestSample.remote.Result.*
-import com.example.gitRestSample.remote.model.SearchUserModel
-import com.example.gitRestSample.remote.model.User
-import com.example.gitRestSample.remote.model.UserDetail
+import com.example.restful_api_example.remote.Result.*
+import com.example.restful_api_example.remote.model.SearchUserModel
+import com.example.restful_api_example.remote.model.User
+import com.example.restful_api_example.remote.model.UserDetail
 
 class DataRepository {
 

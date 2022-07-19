@@ -1,4 +1,4 @@
-package com.example.gitRestSample.ui.profile
+package com.example.restful_api_example.ui.profile
 
 import android.view.View
 import android.widget.Toast
@@ -7,8 +7,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
-import com.example.gitRestSample.R
-import com.example.gitRestSample.ui.main.ShareViewModel
+import com.example.restful_api_example.R
+import com.example.restful_api_example.ui.main.ShareViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import timber.log.Timber

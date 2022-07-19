@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.gitRestSample
-
-import android.os.Handler
-import android.os.Looper
+package com.example.restful_api_example
 
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors

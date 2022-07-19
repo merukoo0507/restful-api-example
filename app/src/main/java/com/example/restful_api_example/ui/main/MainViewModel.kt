@@ -1,14 +1,13 @@
-package com.example.gitRestSample.ui.main
+package com.example.restful_api_example.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gitRestSample.remote.DataRepository
-import com.example.gitRestSample.remote.Result.Success
-import com.example.gitRestSample.remote.model.User
-import com.example.gitRestSample.util.Constants
-import com.example.gitRestSample.util.Constants.TOTAL_USER_LINIT
-import com.example.gitRestSample.util.Constants.USER_NUM_PER_PAGE
+import com.example.restful_api_example.remote.DataRepository
+import com.example.restful_api_example.remote.Result.Success
+import com.example.restful_api_example.remote.model.User
+import com.example.restful_api_example.util.Constants.TOTAL_USER_LINIT
+import com.example.restful_api_example.util.Constants.USER_NUM_PER_PAGE
 import kotlinx.coroutines.launch
 import timber.log.Timber
 

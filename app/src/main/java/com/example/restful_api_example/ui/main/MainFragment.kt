@@ -1,4 +1,4 @@
-package com.example.gitRestSample.ui.main
+package com.example.restful_api_example.ui.main
 
 import android.os.Bundle
 import android.text.Editable
@@ -11,8 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.gitRestSample.R
-import com.example.gitRestSample.remote.model.User
+import com.example.restful_api_example.R
+import com.example.restful_api_example.remote.model.User
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber

@@ -1,4 +1,4 @@
-package com.example.gitRestSample.remote.model
+package com.example.restful_api_example.remote.model
 
 
 import com.google.gson.annotations.SerializedName

@@ -1,4 +1,4 @@
-package com.example.gitRestSample
+package com.example.restful_api_example
 
 import android.app.Application
 import com.facebook.flipper.android.AndroidFlipperClient

@@ -1,14 +1,12 @@
-package com.example.gitRestSample.remote
+package com.example.restful_api_example.remote
 
-import android.app.Application
-import com.example.gitRestSample.MainApplication.Companion.networkFlipperPlugin
-import com.example.gitRestSample.remote.model.SearchUserModel
-import com.example.gitRestSample.remote.model.User
-import com.example.gitRestSample.remote.model.UserDetail
-import com.example.gitRestSample.util.Constants.USER_NUM_PER_PAGE
-import com.example.gitRestSample.util.Constants.token
+import com.example.restful_api_example.MainApplication.Companion.networkFlipperPlugin
+import com.example.restful_api_example.remote.model.SearchUserModel
+import com.example.restful_api_example.remote.model.User
+import com.example.restful_api_example.remote.model.UserDetail
+import com.example.restful_api_example.util.Constants.USER_NUM_PER_PAGE
+import com.example.restful_api_example.util.Constants.token
 import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
-import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

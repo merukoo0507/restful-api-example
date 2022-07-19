@@ -1,4 +1,4 @@
-package com.example.gitRestSample.remote
+package com.example.restful_api_example.remote
 
 import timber.log.Timber
 import java.lang.Exception

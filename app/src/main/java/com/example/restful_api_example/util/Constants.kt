@@ -1,4 +1,4 @@
-package com.example.gitRestSample.util
+package com.example.restful_api_example.util
 
 object Constants {
     const val USER_NUM_PER_PAGE = 30
