@@ -34,14 +34,9 @@ class MainFragment: Fragment(R.layout.fragment_main) {
     override fun onStart() {
         super.onStart()
 
-        refreshPage()
         recycleview()
         observers()
         events()
-    }
-
-    fun refreshPage() {
-        viewmodel.updateStatus.value = true
     }
 
     private fun recycleview() {
@@ -58,7 +53,7 @@ class MainFragment: Fragment(R.layout.fragment_main) {
         recycle_view.adapter = userAdapter
     }
 
-    fun observers() {
+    private fun observers() {
         // Can't access the Fragment View's LifecycleOwner when getView() is null i.e., before onCreateView() or after onDestroyView()
         viewmodel.users.observe(viewLifecycleOwner, Observer {
             Timber.d("users size: ${it.size}")
@@ -102,6 +97,7 @@ class MainFragment: Fragment(R.layout.fragment_main) {
         }
 
         add_item.setOnClickListener {
+            var id = Integer.parseInt(edit_id.text.toString())
             var user = User(id, edit_avatar_url.text.toString(), edit_login.text.toString(), false)
             viewmodel.addUser(user)
         }

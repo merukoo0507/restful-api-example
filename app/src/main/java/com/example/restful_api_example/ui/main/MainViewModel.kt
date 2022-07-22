@@ -1,5 +1,6 @@
 package com.example.restful_api_example.ui.main
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +14,7 @@ import timber.log.Timber
 
 class MainViewModel: ViewModel() {
     private var _allUsers: MutableLiveData<List<User>> = MutableLiveData(listOf())
-    val users: MutableLiveData<List<User>> = _allUsers
+    val users: LiveData<List<User>> = _allUsers
     private var _showProgressBar = MutableLiveData(false)
     val showProcessBar = _showProgressBar
     private var _errorMsg = MutableLiveData("")
@@ -21,25 +22,15 @@ class MainViewModel: ViewModel() {
     var searchKeyWords = MutableLiveData("")
     var since = 1
     var page = 1
-    var updateStatus = MutableLiveData(false)
 
-    init {
-        _allUsers.value = arrayListOf()
-    }
-
-    private fun getUsers() {
+    private fun getAllUsers() {
         Timber.d("getUsers size: ${_allUsers.value!!.size}, since: $since")
         viewModelScope.launch {
             showProcessBar.value = true
             DataRepository.instance.getUsers(since).let {
                 showProcessBar.value = false
                 if (it is Success) {
-                    val list = arrayListOf<User>()
-                    list.addAll(_allUsers.value!!.toList())
-                    list.addAll(it.data)
-                    _allUsers.value = list
-                    updateStatus.value = true
-
+                    _allUsers.value = _allUsers.value?.plus(it.data)
                     since = it.data.last().id
                 } else {
                     _errorMsg.value = it.toString()
@@ -55,12 +46,7 @@ class MainViewModel: ViewModel() {
             DataRepository.instance.searchUsers(searchKeyWords.value.toString(), page).let {
                 showProcessBar.value = false
                 if (it is Success) {
-                    val list = arrayListOf<User>()
-                    list.addAll(_allUsers.value!!.toList())
-                    list.addAll(it.data.items)
-                    _allUsers.value = list
-                    updateStatus.value = true
-
+                    _allUsers.value = _allUsers.value?.plus(it.data.items)
                     page++
                 } else {
                     _errorMsg.value = it.toString()
@@ -88,7 +74,7 @@ class MainViewModel: ViewModel() {
             if (showProcessBar.value == true) return
             if ((users.value!!.size + USER_NUM_PER_PAGE) < TOTAL_USER_LINIT) {
                 if (searchKeyWords.value!!.isNullOrEmpty()) {
-                    getUsers()
+                    getAllUsers()
                 } else {
                     getSearchUsers()
                 }
@@ -103,7 +89,7 @@ class MainViewModel: ViewModel() {
         _allUsers.value = listOf()
         if (s.isNullOrEmpty()) {
             since = 1
-            getUsers()
+            getAllUsers()
         } else {
             page = 1
             getSearchUsers()
@@ -111,36 +97,32 @@ class MainViewModel: ViewModel() {
     }
 
     fun addUser(user: User) {
-        var list: ArrayList<User> = arrayListOf()
-        list.add(user)
-        list.addAll(users.value!!)
-        _allUsers.value = list
+        _allUsers.value = listOf(user).plus(_allUsers.value!!)
     }
 
     fun deleteUser(id: Int) {
-        var list: List<User> = _allUsers.value!!.filter { it.id != id }
-        _allUsers.value = list
+        _allUsers.value?.forEachIndexed { index, user ->
+            if (user.id == id)
+                _allUsers.value = _allUsers.value?.minus(_allUsers.value!![index])
+        }
     }
 
-    fun updateUser(user: User) {
-        var list: ArrayList<User> = arrayListOf()
-        list.addAll(users.value!!)
-        list.forEachIndexed { index, it ->
-            if (it.id == user.id) {
-                list[index] = user
-                return@forEachIndexed
+    fun updateUser(_user: User) {
+        var list = _allUsers.value?.toMutableList()
+        list?.forEachIndexed { index, user ->
+            if (user.id == _user.id) {
+                list[index] = _user
             }
         }
-        _allUsers.value = list
+        _allUsers.value = list?.toList()
     }
 
     fun changePos(fromPos: Int, toPos: Int) {
-        _allUsers.value?.get(fromPos)?.let {
-            var list: ArrayList<User> = arrayListOf()
-            var oldList = _allUsers.value!!.filterIndexed { index, user -> index != fromPos }
-            list.addAll(oldList)
-            list.add(toPos, it)
-            _allUsers.value = list
+        var list = _allUsers.value?.toMutableList()
+        var _user = list?.removeAt(fromPos)
+        if (_user != null) {
+            list?.add(toPos, _user)
+            _allUsers.value = list?.toList()
         }
     }
 }
