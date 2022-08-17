@@ -23,6 +23,10 @@ class MainViewModel: ViewModel() {
     var since = 1
     var page = 1
 
+    init {
+        getAllUsers()
+    }
+
     private fun getAllUsers() {
         Timber.d("getUsers size: ${_allUsers.value!!.size}, since: $since")
         viewModelScope.launch {

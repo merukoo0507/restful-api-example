@@ -25,12 +25,6 @@ class MainFragment: Fragment(R.layout.fragment_main) {
 
     private lateinit var userAdapter: UserAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewmodel.loadMoreUserList()
-    }
-
     override fun onStart() {
         super.onStart()
 
