@@ -6,4 +6,5 @@ import com.example.restful_api_example.remote.model.User
 
 class ShareViewModel: ViewModel() {
     var user = MutableLiveData<User>()
+    var navigationDirection = MutableLiveData<String>("")
 }
