@@ -7,12 +7,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.restful_api_example.R
 import com.example.restful_api_example.remote.model.User
+import com.example.restful_api_example.ui.profile.ProfileFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
@@ -37,11 +38,11 @@ class MainFragment: Fragment(R.layout.fragment_main) {
         userAdapter = UserAdapter(requireContext(),
             { viewmodel.loadMoreUserList() }) {
             shareViewModel.user.value = it
-            findNavController().navigate(R.id.action_mainFragment_to_profile_fragment)
-//            parentFragmentManager.commit {
-//                add(R.id.nav_host_fragment_container, ProfileFragment::class.java, bundle, null)
-//                addToBackStack(null)
-//            }
+//            findNavController().navigate(R.id.action_mainFragment_to_profile_fragment)
+            requireActivity().supportFragmentManager.commit {
+                add(R.id.nav_host_fragment_container, ProfileFragment::class.java, null)
+                addToBackStack("profile")
+            }
         }
         recycle_view.layoutManager = LinearLayoutManager(requireContext())
         recycle_view.adapter = userAdapter

@@ -2,6 +2,7 @@ package com.example.restful_api_example.ui.profile
 
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -19,6 +20,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     override fun onStart() {
         super.onStart()
+        var bundle = arguments
+        var show = bundle?.getBoolean("showBack", false)
+        show?.let {
+            if (it) {
+                (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                (requireActivity() as AppCompatActivity).supportActionBar?.setHomeButtonEnabled(false)
+            }
+        }
+
         shareViewModel.user.value?.let {
             viewmodel.getUser(it.login)
         }
