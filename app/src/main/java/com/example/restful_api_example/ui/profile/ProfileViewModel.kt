@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.restful_api_example.remote.DataRepository
-import com.example.restful_api_example.remote.Result.Success
+import com.example.restful_api_example.remote.Result
 import com.example.restful_api_example.remote.model.UserDetail
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -22,9 +22,9 @@ class ProfileViewModel: ViewModel() {
     fun getUser(name: String) {
         viewModelScope.launch {
             showProcessBar.value = true
-            DataRepository.instance.getUser(name).let {
+            DataRepository.getUser(name).let {
                 showProcessBar.value = false
-                if (it is Success) {
+                if (it is Result.Success) {
                     Timber.d(it.data.login)
                     _user.value = it.data
                 } else {

@@ -8,10 +8,9 @@ import com.example.restful_api_example.remote.model.SearchUserModel
 import com.example.restful_api_example.remote.model.User
 import com.example.restful_api_example.remote.model.UserDetail
 
-class DataRepository {
-
+object DataRepository {
     suspend fun getUsers(since: Int): Result<List<User>> {
-        return withContext(ioDispatcher) {
+        return withContext(Dispatchers.IO) {
             return@withContext try {
                 Success(ApiService.getApiManager().getUsers(since))
             } catch (e: Exception) {
@@ -21,8 +20,7 @@ class DataRepository {
     }
 
     suspend fun getUserRepos(page: Int): Result<List<User>> {
-
-        return withContext(ioDispatcher) {
+        return withContext(Dispatchers.IO) {
             return@withContext try {
                 Success(ApiService.getApiManager().getUserRepos(page))
             } catch (e: Exception) {
@@ -32,7 +30,7 @@ class DataRepository {
     }
 
     suspend fun searchUsers(q: String, page: Int): Result<SearchUserModel> {
-        return withContext(ioDispatcher) {
+        return withContext(Dispatchers.IO) {
             return@withContext try {
                 Success(ApiService.getApiManager().searchUsers(q, page))
             } catch (e: Exception) {
@@ -42,18 +40,12 @@ class DataRepository {
     }
 
     suspend fun getUser(name: String): Result<UserDetail> {
-        return withContext(ioDispatcher) {
+        return withContext(Dispatchers.IO) {
             return@withContext  try {
                 Success(ApiService.getApiManager().getUser(name))
             } catch (e: Exception) {
                 Error(e)
             }
         }
-    }
-
-    companion object {
-        val ioDispatcher = Dispatchers.IO
-
-        val instance by lazy { DataRepository() }
     }
 }

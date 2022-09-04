@@ -1,22 +1,25 @@
 package com.example.restful_api_example.ui.main
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.os.Parcelable
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.restful_api_example.R
 import com.example.restful_api_example.remote.model.User
-import com.example.restful_api_example.ui.profile.ProfileFragment
+import com.example.restful_api_example.util.Constants.BUNDLE_RECYCLER_LAYOUT
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.coroutines.*
 import timber.log.Timber
+
 
 class MainFragment: Fragment(R.layout.fragment_main) {
     // Use the 'by viewModels()' Kotlin property delegate from the fragment-ktx artifact
@@ -28,24 +31,24 @@ class MainFragment: Fragment(R.layout.fragment_main) {
 
     override fun onStart() {
         super.onStart()
-
         recycleview()
         observers()
         events()
     }
 
     private fun recycleview() {
-        userAdapter = UserAdapter(requireContext(),
-            { viewmodel.loadMoreUserList() }) {
+        userAdapter = UserAdapter{
             shareViewModel.user.value = it
-//            findNavController().navigate(R.id.action_mainFragment_to_profile_fragment)
-            requireActivity().supportFragmentManager.commit {
-                add(R.id.nav_host_fragment_container, ProfileFragment::class.java, null)
-                addToBackStack("profile")
-            }
+            findNavController().navigate(R.id.action_mainFragment_to_profile_fragment)
         }
         recycle_view.layoutManager = LinearLayoutManager(requireContext())
         recycle_view.adapter = userAdapter
+        recycle_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                var pos = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                if (pos == userAdapter.itemCount-1) viewmodel.loadMoreUserList()
+            }
+        })
     }
 
     private fun observers() {
@@ -72,19 +75,12 @@ class MainFragment: Fragment(R.layout.fragment_main) {
     }
 
     fun events() {
-        search_edit_text.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Timber.d("onTextChanged: $s")
-                viewmodel.searchUserList("$s")
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-        })
+        search_edit_text.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                viewmodel.searchUserList(search_edit_text.text.toString())
+                true
+            } else false
+        }
 
         btn_show_action.setOnClickListener {
             if (ll_actions.visibility == View.GONE) ll_actions.visibility = View.VISIBLE
