@@ -1,11 +1,12 @@
 package com.example.restful_api_example.ui.main
 
+import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.restful_api_example.remote.DataRepository
-import com.example.restful_api_example.remote.Result.Success
+import com.example.restful_api_example.remote.Result
 import com.example.restful_api_example.remote.model.User
 import com.example.restful_api_example.util.Constants.TOTAL_USER_LINIT
 import com.example.restful_api_example.util.Constants.USER_NUM_PER_PAGE
@@ -31,13 +32,18 @@ class MainViewModel: ViewModel() {
         Timber.d("getUsers size: ${_allUsers.value!!.size}, since: $since")
         viewModelScope.launch {
             showProcessBar.value = true
-            DataRepository.instance.getUsers(since).let {
-                showProcessBar.value = false
-                if (it is Success) {
-                    _allUsers.value = _allUsers.value?.plus(it.data)
-                    since = it.data.last().id
-                } else {
-                    _errorMsg.value = it.toString()
+            DataRepository.getUsers(since).let {
+                when(it) {
+                    is Result.Success -> {
+                        _allUsers.value = _allUsers.value?.plus(it.data)
+                        since = it.data.last().id
+                        showProcessBar.value = false
+                    }
+                    is Result.Error -> {
+                        _errorMsg.value = it.toString()
+                        showProcessBar.value = false
+                    }
+                    is Result.Loading -> {}
                 }
             }
         }
@@ -47,13 +53,18 @@ class MainViewModel: ViewModel() {
         Timber.d("getSearchUsers: ${searchKeyWords.value.toString()}, page:$page")
         viewModelScope.launch {
             showProcessBar.value = true
-            DataRepository.instance.searchUsers(searchKeyWords.value.toString(), page).let {
-                showProcessBar.value = false
-                if (it is Success) {
-                    _allUsers.value = _allUsers.value?.plus(it.data.items)
-                    page++
-                } else {
-                    _errorMsg.value = it.toString()
+            DataRepository.searchUsers(searchKeyWords.value.toString(), page).let {
+                when(it) {
+                    is Result.Success -> {
+                        _allUsers.value = _allUsers.value?.plus(it.data.items)
+                        page++
+                        showProcessBar.value = false
+                    }
+                    is Result.Error -> {
+                        _errorMsg.value = it.toString()
+                        showProcessBar.value = false
+                    }
+                    is Result.Loading -> {}
                 }
             }
         }
@@ -61,11 +72,16 @@ class MainViewModel: ViewModel() {
 
     fun getUserRepos(page: Int, perPage: Int) {
         viewModelScope.launch {
-            DataRepository.instance.getUserRepos(page).let {
-                if (it is Success) {
-                    // 設定Repo資料
-                } else {
-                    _errorMsg.value = it.toString()
+            DataRepository.getUserRepos(page).let {
+                when(it) {
+                    is Result.Success -> {
+                        showProcessBar.value = false
+                    }
+                    is Result.Error -> {
+                        _errorMsg.value = it.toString()
+                        showProcessBar.value = false
+                    }
+                    is Result.Loading -> {}
                 }
             }
         }

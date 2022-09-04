@@ -20,15 +20,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     override fun onStart() {
         super.onStart()
-        var bundle = arguments
-        var show = bundle?.getBoolean("showBack", false)
-        show?.let {
-            if (it) {
-                (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-                (requireActivity() as AppCompatActivity).supportActionBar?.setHomeButtonEnabled(false)
-            }
-        }
-
         shareViewModel.user.value?.let {
             viewmodel.getUser(it.login)
         }

@@ -30,8 +30,8 @@ interface ApiService {
     @GET("users")
     suspend fun getUsers(
         @Query("since") since: Int = 0,
-        @Query("per_page") limit: Int = USER_NUM_PER_PAGE,
-        @Header("authorization") auth: String = token
+        @Query("per_page") limit: Int = USER_NUM_PER_PAGE
+//        @Header("authorization") auth: String = token
     ): List<User>
 
 
@@ -74,13 +74,13 @@ interface ApiService {
                 .writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS)
                 .build()
 
-            var retrofit = Retrofit.Builder()
+            return Retrofit.Builder()
                     .client(okHttpClient)
                     .baseUrl("https://api.github.com/")     //直接查訊link可以知道可用的api
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)
                     .build()
-            return retrofit.create(ApiService::class.java)
+                    .create(ApiService::class.java)
         }
 
         fun getApiManager(): ApiService {

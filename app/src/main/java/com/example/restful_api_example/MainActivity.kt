@@ -1,10 +1,8 @@
 package com.example.restful_api_example
 
 import android.os.Bundle
-import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -20,25 +18,22 @@ import com.example.restful_api_example.ui.profile.ProfileFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
-//    lateinit var navController: NavController
-//    lateinit var appBarConfiguration: AppBarConfiguration
+    lateinit var navController: NavController
+    lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
-//        navController = navHostFragment.findNavController()
-//
-//        appBarConfiguration = AppBarConfiguration(
-//            setOf(R.id.fragment_main),
-//            drawer_layout
-//        )
-
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
+        navController = navHostFragment.findNavController()
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.fragment_main),
+            drawer_layout
+        )
         setSupportActionBar(toolbar)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-//        nav_view.setupWithNavController(navController)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        nav_view.setupWithNavController(navController)
 
         var shareViewModel = ViewModelProvider(this).get(ShareViewModel::class.java)
         customLayout.setShareViewModel(shareViewModel)
@@ -52,8 +47,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 "Left" -> {
                     //預設已有實作closeDrawer
-//                    if (drawer_layout.isDrawerOpen(GravityCompat.START))
-//                        drawer_layout.closeDrawer(GravityCompat.START)
+                    if (drawer_layout.isDrawerOpen(GravityCompat.START))
+                        drawer_layout.closeDrawer(GravityCompat.START)
                     if (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) is ProfileFragment) {
                         return@Observer
                     }
@@ -74,10 +69,10 @@ class MainActivity : AppCompatActivity() {
 //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 //        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
 //    }
-//
-//    override fun onSupportNavigateUp(): Boolean {
-//        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-//    }
+    // 上面的按鈕委託給NavController.navigateUp
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
