@@ -1,12 +1,10 @@
 package com.example.restful_api_example.remote
 
-import com.example.restful_api_example.MainApplication.Companion.networkFlipperPlugin
 import com.example.restful_api_example.remote.model.SearchUserModel
 import com.example.restful_api_example.remote.model.User
 import com.example.restful_api_example.remote.model.UserDetail
 import com.example.restful_api_example.util.Constants.USER_NUM_PER_PAGE
 import com.example.restful_api_example.util.Constants.token
-import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -57,18 +55,17 @@ interface ApiService {
 
             val interceptor = Interceptor { chain ->
                 val request = chain
-                    ?.request()
-                    ?.newBuilder()
-                    ?.addHeader("Content-Type", "application/json")
-                    ?.addHeader("User-Accept", "application/vnd.github.v3+json")
-                    ?.build()
-                chain?.proceed(request)
+                    .request()
+                    .newBuilder()
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("User-Accept", "application/vnd.github.v3+json")
+                    .build()
+                chain.proceed(request)
             }
 
             var okHttpClient = OkHttpClient().newBuilder()
                 .addInterceptor(logging)
                 .addInterceptor(interceptor)
-                .addNetworkInterceptor(FlipperOkhttpInterceptor(networkFlipperPlugin))
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
                 .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
                 .writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS)

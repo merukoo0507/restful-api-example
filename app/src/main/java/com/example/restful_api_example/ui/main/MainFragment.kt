@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.restful_api_example.R
 import com.example.restful_api_example.remote.model.User
-import com.example.restful_api_example.util.Constants.BUNDLE_RECYCLER_LAYOUT
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.coroutines.*
